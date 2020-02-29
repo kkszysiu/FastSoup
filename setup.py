@@ -23,7 +23,7 @@ setup(
     name='fast-soup',
     version='1.0.0',
     description='BeautifulSoup interface for lxml',
-    python_requires='==3.*,>=3.6.0',
+    python_requires='>=2.7.0',
     author='spumer',
     author_email='spumer-tm@yandex.ru',
     license='MIT',

@@ -7,17 +7,19 @@ license = "MIT"
 readme = "README.rst"
 
 [tool.poetry.dependencies]
-python = "^3.6"
+python = "^2.7 || >=3.6"
 lxml = "^4.5.0"
 beautifulsoup4 = "^4.3.2"
 cssselect = "^1.0.1"
+html5-parser="^0.4.9"
+"backports.functools-lru-cache" = { version = "^1.6.1", python = "~2.7" }
 
 [tool.poetry.dev-dependencies]
-pytest = "^5"
+pytest = { version = "^5", python = ">=3.6" }
 bumpversion = "^0.5.3"
 unify = "^0.4.0"
-flake8-awesome = "^1.2"
-black = "^19.10b0"
+#flake8-awesome = { version = "^1.2", python = ">=3.6" }
+black = { version = "^19.10b0", python = ">=3.6" }
 pytest-cov = "^2.6"
 pytest-deadfixtures = "^2.1.0"
 

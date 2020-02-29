@@ -1,15 +1,21 @@
+# -*- coding: utf-8 -*-
 """Provide BeautifulSoup-like interface object
 to fast html parsing.
 
 Interface more simple than original and don't allow use all features.
 """
-
 import functools
 import io
 
 import lxml.etree
 import lxml.html
 from bs4 import SoupStrainer as BS4SoupStrainer
+import html5_parser
+
+try:
+    from functools import lru_cache
+except ImportError:
+    from backports.functools_lru_cache import lru_cache
 
 try:
     import lxml.cssselect
@@ -36,7 +42,7 @@ _missing = object()
 
 
 def _el2str(el):
-    return lxml.etree.tostring(el, method='c14n', with_tail=False).decode()
+    return lxml.etree.tostring(el, method='html', with_tail=False).decode()
 
 
 def _parse_html(html, parser=lxml.html.html_parser):
@@ -48,17 +54,18 @@ class HDict(dict):
         return hash(frozenset(self.items()))
 
 
-class Tag:
+class Tag(object):
     scope_rel = '.'
 
-    __slots__ = ('_el', '_translator')
+    __slots__ = ('_el', '_translator', '_force_html')
 
-    def __init__(self, el):
-        if isinstance(el, lxml.html.HtmlElement):
+    def __init__(self, el, force_html=False):
+        if isinstance(el, lxml.html.HtmlElement) or force_html:
             translator = html_translator
         else:
             translator = xml_translator
 
+        self._force_html = force_html
         self._el = el
         self._translator = translator
 
@@ -107,7 +114,7 @@ class Tag:
             return cls.scope_rel + '/'
 
     @classmethod
-    @functools.lru_cache()
+    @lru_cache()
     def _build_css_xpath(cls, selector, translator):
         return lxml.etree.XPath(translator.css_to_xpath(selector))
 
@@ -176,8 +183,8 @@ class Tag:
         return ''.join(xpath)
 
     @classmethod
-    @functools.lru_cache()
-    def _build_xpath(cls, names=(), attrs=None, _mode=None, _scope=None) -> lxml.etree.XPath:
+    @lru_cache()
+    def _build_xpath(cls, names=(), attrs=None, _mode=None, _scope=None):
         """Build XPath expression
 
         @param names: tags names
@@ -210,7 +217,7 @@ class Tag:
             names = (name,)
 
         xpath = self._build_xpath(names, HDict(attrs), _mode=_mode, _scope=_scope)
-        return [Tag(el) for el in xpath(self._el)]
+        return [Tag(el, force_html=self._force_html) for el in xpath(self._el)]
 
     def _find(self, name=None, attrs=None, _mode=None, _scope=None):
         res = self._find_all(name=name, attrs=attrs, _mode=_mode, _scope=_scope)
@@ -240,4 +247,14 @@ class FastSoup(Tag):
 
     def __init__(self, markup=''):
         tree = _parse_html(markup)
-        super().__init__(el=tree.getroot())
+        super(FastSoup, self).__init__(tree.getroot())
+
+
+class FastHTML5Soup(Tag):
+    scope_rel = ''
+
+    def __init__(self, markup=''):
+        self._force_html = True
+        self._el = html5_parser.parse(markup)
+        self._translator = html_translator
+
