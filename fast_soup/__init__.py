@@ -42,7 +42,7 @@ _missing = object()
 
 
 def _el2str(el):
-    return lxml.etree.tostring(el, method='html', with_tail=False).decode()
+    return lxml.etree.tostring(el, method='html').decode()
 
 
 def _parse_html(html, parser=lxml.html.html_parser):
