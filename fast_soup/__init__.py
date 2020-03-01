@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """Provide BeautifulSoup-like interface object
 to fast html parsing.
 
@@ -42,7 +41,7 @@ _missing = object()
 
 
 def _el2str(el):
-    return lxml.etree.tostring(el, method='html', encoding='unicode').decode()
+    return lxml.etree.tostring(el, method='html', encoding='utf-8')
 
 
 def _parse_html(html, parser=lxml.html.html_parser):
@@ -202,7 +201,7 @@ class Tag(object):
         else:
             _strainer = name
 
-        # гарантируем что name и attrs всегда будут иметь один формат
+        # we guarantee that name and attrs will always have the same format
         name = _strainer.name
         attrs = _strainer.attrs
 
@@ -211,7 +210,7 @@ class Tag(object):
             attrs.setdefault('text', _strainer.text)
 
         if isinstance(name, list):
-            # _build_xpath принимает только хэшируемые параметры
+            # _build_xpath only accepts hashed parameters
             names = tuple(name)
         else:
             names = (name,)
