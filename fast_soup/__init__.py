@@ -35,7 +35,7 @@ except ImportError as exc:
     html_translator = RaiseOnUse(exc)
 
 
-__version__ = '1.0.0'
+__version__ = '1.0.1'
 
 _missing = object()
 
@@ -125,27 +125,31 @@ class Tag(object):
             return tmplt.format(name, value.replace('"', '\\"'),)
 
         for attr_name, attr_value in attrs.items():
-            if attr_name == 'text':
-                # for case: [text()="..."]
+            if attr_name == 'string':
                 attr_name = 'text()'
+                attr_xpath = _render(attr_name, attr_value, '{}="{}"')
             else:
-                # for case: [@id="..."]
-                attr_name = '@' + attr_name
+                if attr_name == 'text':
+                    # for case: [text()="..."]
+                    attr_name = 'text()'
+                else:
+                    # for case: [@id="..."]
+                    attr_name = '@' + attr_name
 
-            if attr_value:
-                # lxml is more strict than BS4
-                # BS4 mean "contains" logic for attribute search
-                # Use lxml `contains` function to implement this behaviour:
-                # using the space delimiters to find the class name boundaries
-                # cause `contains` match a substring
-                tmplt = 'contains(concat(" ", normalize-space({}), " "), " {} ")'
-                attr_xpath = _render(attr_name, attr_value, tmplt)
+                if attr_value:
+                    # lxml is more strict than BS4
+                    # BS4 mean "contains" logic for attribute search
+                    # Use lxml `contains` function to implement this behaviour:
+                    # using the space delimiters to find the class name boundaries
+                    # cause `contains` match a substring
+                    tmplt = 'contains(concat(" ", normalize-space({}), " "), " {} ")'
+                    attr_xpath = _render(attr_name, attr_value, tmplt)
 
-            # If attr value is empty guess should match tags without this attr too
-            # cause BS4 do that
-            else:
-                # lxml don't match this case, workaround by inverse
-                attr_xpath = 'not(%s)' % _render(attr_name, attr_value or '', '{} != "{}"')
+                # If attr value is empty guess should match tags without this attr too
+                # cause BS4 do that
+                else:
+                    # lxml don't match this case, workaround by inverse
+                    attr_xpath = 'not(%s)' % _render(attr_name, attr_value or '', '{} != "{}"')
 
             attrs_xpath.append(attr_xpath)
 
@@ -216,6 +220,8 @@ class Tag(object):
             names = (name,)
 
         xpath = self._build_xpath(names, HDict(attrs), _mode=_mode, _scope=_scope)
+        if name is None and attrs and list(attrs.keys())[0] in {'string', 'text'}:
+            return [el.text for el in xpath(self._el)]
         return [Tag(el, force_html=self._force_html) for el in xpath(self._el)]
 
     def _find(self, name=None, attrs=None, _mode=None, _scope=None):
@@ -239,6 +245,37 @@ class Tag(object):
 
     def find_next_sibling(self, name=None, **attrs):
         return self._find(name, attrs, _mode='following-sibling', _scope='./')
+
+
+    def insert_before(self, predecessor):
+        """Makes the given element the immediate predecessor of this one.
+
+        The two elements will have the same parent, and the given element
+        will be immediately before this one.
+        """
+        if self is predecessor:
+            raise ValueError("Can't insert an element before itself.")
+        parent = self._el.getparent()
+        if parent is None:
+            raise ValueError("Element has no parent, so 'before' has no meaning.")
+
+        index = parent.index(self._el)
+        parent.insert(index, predecessor)
+
+    def insert_after(self, successor):
+        """Makes the given element the immediate successor of this one.
+
+        The two elements will have the same parent, and the given element
+        will be immediately after this one.
+        """
+        if self is successor:
+            raise ValueError("Can't insert an element after itself.")
+        parent = self._el.getparent()
+        if parent is None:
+            raise ValueError("Element has no parent, so 'after' has no meaning.")
+
+        index = parent.index(self._el)
+        parent.insert(index+1, successor)
 
 
 class FastSoup(Tag):
