@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import pytest
 from bs4 import BeautifulSoup as BS4Soup
 

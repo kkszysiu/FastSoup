@@ -253,6 +253,9 @@ class Tag(object):
         The two elements will have the same parent, and the given element
         will be immediately before this one.
         """
+        if isinstance(successor, Tag):
+            successor = successor.unwrap()
+
         if self is predecessor:
             raise ValueError("Can't insert an element before itself.")
         parent = self._el.getparent()
@@ -268,6 +271,9 @@ class Tag(object):
         The two elements will have the same parent, and the given element
         will be immediately after this one.
         """
+        if isinstance(successor, Tag):
+            successor = successor.unwrap()
+
         if self is successor:
             raise ValueError("Can't insert an element after itself.")
         parent = self._el.getparent()
@@ -276,6 +282,26 @@ class Tag(object):
 
         index = parent.index(self._el)
         parent.insert(index+1, successor)
+
+    def extract(self):
+        element = self.unwrap()
+        parent = element.find('..')
+        parent.remove(element)
+
+    def replace_with(self, replace_with):
+        if replace_with is self:
+            return
+        if isinstance(replace_with, Tag):
+            replace_with = replace_with.unwrap()
+        element = self.unwrap()
+        parent = element.find('..')
+        if not parent:
+            raise ValueError(
+                "Cannot replace one element with another when the"
+                "element to be replaced is not part of a tree.")
+        if replace_with is parent:
+            raise ValueError("Cannot replace a Tag with its parent.")
+        parent.replace(self.unwrap(), replace_with)
 
 
 class FastSoup(Tag):
