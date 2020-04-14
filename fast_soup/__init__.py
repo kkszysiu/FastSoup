@@ -83,6 +83,9 @@ class Tag(object):
     def get(self, item, default=None):
         return self._el.get(item, default)
 
+    def __setitem__(self, item, value):
+        self._el.set(item, value)
+
     def __getitem__(self, item):
         value = self.get(item, _missing)
         if value is _missing:
