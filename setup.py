@@ -21,7 +21,7 @@ if os.path.exists(readme_path):
 setup(
     long_description=readme,
     name='fast-soup',
-    version='1.0.3',
+    version='1.0.4',
     description='BeautifulSoup interface for lxml',
     python_requires='>=2.7.0',
     author='spumer',
