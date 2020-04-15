@@ -256,8 +256,8 @@ class Tag(object):
         The two elements will have the same parent, and the given element
         will be immediately before this one.
         """
-        if isinstance(successor, Tag):
-            successor = successor.unwrap()
+        if isinstance(predecessor, Tag):
+            predecessor = predecessor.unwrap()
 
         if self is predecessor:
             raise ValueError("Can't insert an element before itself.")
