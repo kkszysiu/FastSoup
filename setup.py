@@ -32,7 +32,7 @@ setup(
     package_data={},
     install_requires=[
         'beautifulsoup4==4.*,>=4.3.2', 'cssselect==1.*,>=1.0.1',
-        'lxml==4.*,>=4.5.0'
+        'lxml==4.*,>=4.5.0', 'html5-parser==0.4.*,>=0.4.9'
     ],
     extras_require={
         "dev": [
