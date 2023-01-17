@@ -1,10 +1,9 @@
-# -*- coding: utf-8 -*-
 import pytest
-from bs4 import BeautifulSoup as BS4Soup
 
 import unittest
 
-from fast_soup import FastSoup, FastHTML5Soup
+from fast_soup import FastHTML5Soup
+
 
 class TreeTest(unittest.TestCase):
 
@@ -35,7 +34,7 @@ class TestFind(TreeTest):
     """Basic tests of the find() method.
 
     find() just calls find_all() with limit=1, so it's not tested all
-    that thouroughly here.
+    that thoroughly here.
     """
 
     def test_find_tag(self):
@@ -43,13 +42,12 @@ class TestFind(TreeTest):
         self.assertEqual(soup.find("b").string, "2")
 
     def test_unicode_text_find(self):
-        soup = self.soup(u'<h1>Räksmörgås</h1>')
-        self.assertEqual(soup.find(string=u'Räksmörgås'), u'Räksmörgås')
-
+        soup = self.soup('<h1>Räksmörgås</h1>')
+        self.assertEqual(soup.find(string='Räksmörgås'), u'Räksmörgås')
 
     def test_unicode_attribute_find(self):
         soup = self.soup(u'<h1 id="Räksmörgås">here it is</h1>')
-        self.assertEqual("here it is", soup.find(id=u'Räksmörgås').string)
+        self.assertEqual("here it is", soup.find(id='Räksmörgås').string)
 
     def test_find_everything(self):
         """Test an optimization that finds all tags."""

@@ -36,7 +36,7 @@ _missing = object()
 
 
 def _el2str(el):
-    return lxml.etree.tostring(el, method='html', encoding='utf-8')
+    return lxml.etree.tostring(el, method='html', encoding='utf-8').decode()
 
 
 def _parse_html(html, parser=lxml.html.html_parser):
@@ -204,7 +204,7 @@ class Tag:
 
     @classmethod
     @functools.lru_cache()
-    def _build_xpath(cls, names=(), attrs=None, _mode=None, _scope=None):
+    def _build_xpath(cls, names=(), attrs=None, _mode=None, _scope=None) -> lxml.etree.XPath:
         """Build XPath expression
 
         @param names: tags names
