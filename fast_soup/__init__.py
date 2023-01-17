@@ -30,7 +30,7 @@ except ImportError as exc:
     html_translator = RaiseOnUse(exc)
 
 
-__version__ = '1.1.0'
+__version__ = '1.1.1'
 
 _missing = object()
 
@@ -286,7 +286,6 @@ class Tag:
 
         parent.replace(old_el, new_el)
 
-
     def insert_before(self, predecessor):
         """Makes the given element the immediate predecessor of this one.
 
@@ -323,26 +322,6 @@ class Tag:
         index = parent.index(self._el)
         parent.insert(index+1, successor)
 
-    def extract(self):
-        element = self.unwrap()
-        parent = element.find('..')
-        parent.remove(element)
-
-    def replace_with(self, replace_with):
-        if replace_with is self:
-            return
-        if isinstance(replace_with, Tag):
-            replace_with = replace_with.unwrap()
-        element = self.unwrap()
-        parent = element.find('..')
-        if not parent:
-            raise ValueError(
-                "Cannot replace one element with another when the"
-                "element to be replaced is not part of a tree.")
-        if replace_with is parent:
-            raise ValueError("Cannot replace a Tag with its parent.")
-        parent.replace(self.unwrap(), replace_with)
-
 
 class FastSoup(Tag):
     scope_rel = ''
@@ -355,8 +334,8 @@ class FastSoup(Tag):
 class FastHTML5Soup(Tag):
     scope_rel = ''
 
-    def __init__(self, markup=''):
+    def __init__(self, el, markup=''):
+        super().__init__(el, force_html=True)
         self._force_html = True
         self._el = html5_parser.parse(markup)
         self._translator = html_translator
-
