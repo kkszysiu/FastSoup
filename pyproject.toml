@@ -11,7 +11,7 @@ python = "^3.6"
 lxml = "^4.5.0"
 beautifulsoup4 = "^4.3.2"
 cssselect = "^1.0.1"
-html5-parser = "^0.4.10
+html5-parser = "^0.4.10"
 
 [tool.poetry.dev-dependencies]
 pytest = "^7"
