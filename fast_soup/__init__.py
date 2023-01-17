@@ -12,11 +12,6 @@ from bs4 import SoupStrainer as BS4SoupStrainer
 import html5_parser
 
 try:
-    from functools import lru_cache
-except ImportError:
-    from backports.functools_lru_cache import lru_cache
-
-try:
     import lxml.cssselect
 
     xml_translator = lxml.cssselect.LxmlTranslator()
@@ -35,7 +30,7 @@ except ImportError as exc:
     html_translator = RaiseOnUse(exc)
 
 
-__version__ = '1.0.4'
+__version__ = '1.1.0'
 
 _missing = object()
 
@@ -53,7 +48,7 @@ class HDict(dict):
         return hash(frozenset(self.items()))
 
 
-class Tag(object):
+class Tag:
     scope_rel = '.'
 
     __slots__ = ('_el', '_translator', '_force_html')
@@ -116,7 +111,7 @@ class Tag(object):
             return cls.scope_rel + '/'
 
     @classmethod
-    @lru_cache()
+    @functools.lru_cache()
     def _build_css_xpath(cls, selector, translator):
         return lxml.etree.XPath(translator.css_to_xpath(selector))
 
@@ -189,7 +184,7 @@ class Tag(object):
         return ''.join(xpath)
 
     @classmethod
-    @lru_cache()
+    @functools.lru_cache()
     def _build_xpath(cls, names=(), attrs=None, _mode=None, _scope=None):
         """Build XPath expression
 
