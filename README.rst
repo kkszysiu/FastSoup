@@ -23,14 +23,14 @@ Key features
 
   * Search: ``find``\ , ``find_all``\ , ``find_next``\ , ``find_next_sibling``
   * Text: ``get_text``\ , ``string``
-  * Tag: ``name``\ , ``get``\ , ``clear``\ , ``__getitem__``\ , ``__str__``
+  * Tag: ``name``\ , ``get``\ , ``clear``\ , ``__getitem__``\ , ``__str__``, ``__repr__``, ``append``, ``new_tag``, ``extract``, ``replace_with``
 
 Install
 -------
 
 .. code-block:: bash
 
-   pip install fast-soup==1.0.0
+   pip install fast-soup==1.1.0
 
 How to use
 ----------

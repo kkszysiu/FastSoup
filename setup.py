@@ -21,9 +21,9 @@ if os.path.exists(readme_path):
 setup(
     long_description=readme,
     name='fast-soup',
-    version='1.0.4',
+    version='1.1.1',
     description='BeautifulSoup interface for lxml',
-    python_requires='>=2.7.0',
+    python_requires='==3.*,>=3.6.0',
     author='spumer',
     author_email='spumer-tm@yandex.ru',
     license='MIT',
@@ -37,9 +37,9 @@ setup(
     extras_require={
         "dev": [
             "black==19.*,>=19.10.0", "bumpversion==0.*,>=0.5.3",
-            "flake8-awesome==1.*,>=1.2.0", "pytest==5.*,>=5.0.0",
+            "flake8-awesome==1.*,>=1.2.0", "pytest>=5,<7",
             "pytest-cov==2.*,>=2.6.0", "pytest-deadfixtures==2.*,>=2.1.0",
-            "unify==0.*,>=0.4.0"
+            "unify==0.*,>=0.5.0"
         ]
     },
 )
