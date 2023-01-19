@@ -334,8 +334,7 @@ class FastSoup(Tag):
 class FastHTML5Soup(Tag):
     scope_rel = ''
 
-    def __init__(self, el, markup=''):
-        super().__init__(el, force_html=True)
+    def __init__(self, markup=''):
         self._force_html = True
         self._el = html5_parser.parse(markup)
         self._translator = html_translator

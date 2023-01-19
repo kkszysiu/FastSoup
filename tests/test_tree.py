@@ -46,7 +46,7 @@ class TestFind(TreeTest):
         self.assertEqual(soup.find(string='Räksmörgås'), u'Räksmörgås')
 
     def test_unicode_attribute_find(self):
-        soup = self.soup(u'<h1 id="Räksmörgås">here it is</h1>')
+        soup = self.soup('<h1 id="Räksmörgås">here it is</h1>')
         self.assertEqual("here it is", soup.find(id='Räksmörgås').string)
 
     def test_find_everything(self):
