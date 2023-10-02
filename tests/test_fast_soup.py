@@ -8,7 +8,7 @@ from fast_soup import FastSoup
 
 @pytest.fixture()
 def data():
-    return '''
+    return u'''
 <html>
 
 <a href="">   It's a text    </a>
@@ -124,6 +124,26 @@ def test_recursive(soup):
 def test_select(soup):
     res = soup.select('span.strikeout.body')
     assert len(res) == 1
+
+
+def test_get_attribute(soup):
+    res = soup.find('a')
+
+    assert res.name == 'a'
+    assert res['href'] == ''
+    with pytest.raises(KeyError):
+        assert res['nonexistent']
+    assert res.get('nonexistent2', 'default') == 'default'
+
+
+def test_set_attribute(soup):
+    res = soup.find('a')
+
+    assert res.name == 'a'
+    assert res.get('nonexistent2', 'default') == 'default'
+    res['nonexistent2'] = 'existent'
+    assert res['nonexistent2'] == 'existent'
+    assert res.get('nonexistent2', 'default') == 'existent'
 
 
 def test_new_tag(soup_cls):
