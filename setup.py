@@ -20,10 +20,11 @@ if os.path.exists(readme_path):
 
 setup(
     long_description=readme,
+    long_description_content_type="text/markdown",
     name='fast-soup',
-    version='1.1.1',
+    version='1.2.0',
     description='BeautifulSoup interface for lxml',
-    python_requires='==3.*,>=3.6.0',
+    python_requires='==3.*,>=3.8.0',
     author='spumer',
     author_email='spumer-tm@yandex.ru',
     license='MIT',
