@@ -31,8 +31,8 @@ setup(
     package_dir={"": "."},
     package_data={},
     install_requires=[
-        'beautifulsoup4==4.*,>=4.3.2', 'cssselect==1.*,>=1.0.1',
-        'lxml==4.*,>=4.5.0', 'html5-parser==0.4.*,>=0.4.9'
+        'beautifulsoup4==4.*,>=4.13.4', 'cssselect==1.*,>=1.3.0',
+        'lxml==4.*,>=5.4.0', 'html5-parser @ git+https://github.com/kkszysiu/html5-parser.git@0.4.13'
     ],
     extras_require={
         "dev": [
