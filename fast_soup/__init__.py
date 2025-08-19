@@ -45,7 +45,22 @@ def _parse_html(html, parser=lxml.html.html_parser):
 
 class HDict(dict):
     def __hash__(self):
-        return hash(frozenset(self.items()))
+        def make_hashable(item):
+            if isinstance(item, list):
+                return tuple(item)
+            elif isinstance(item, dict):
+                return tuple(sorted(item.items()))
+            elif isinstance(item, set):
+                return frozenset(item)
+            return item
+
+        hashable_items = []
+        for key, value in self.items():
+            hashable_key = make_hashable(key)
+            hashable_value = make_hashable(value)
+            hashable_items.append((hashable_key, hashable_value))
+
+        return hash(frozenset(hashable_items))
 
 
 class Tag:
@@ -222,13 +237,12 @@ class Tag:
         else:
             _strainer = name
 
-        # we guarantee that name and attrs will always have the same format
-        name = _strainer.name
-        attrs = _strainer.attrs
+        name = getattr(_strainer, 'name', None) or name
+        attrs = getattr(_strainer, 'attrs', None) or attrs
 
-        if _strainer.text is not None:
-            # don't override if `text` field was manually setted before
-            attrs.setdefault('text', _strainer.text)
+        if _strainer.string is not None:
+            # don't override if `string` field was manually setted before
+            attrs.setdefault('string', _strainer.string)
 
         if isinstance(name, list):
             # _build_xpath only accepts hashed parameters
