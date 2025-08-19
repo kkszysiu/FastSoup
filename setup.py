@@ -22,7 +22,7 @@ setup(
     long_description=readme,
     long_description_content_type="text/markdown",
     name='fast-soup',
-    version='1.2.0',
+    version='1.2.1',
     description='BeautifulSoup interface for lxml',
     python_requires='==3.*,>=3.8.0',
     author='spumer',
