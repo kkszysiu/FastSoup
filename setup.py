@@ -22,7 +22,7 @@ setup(
     long_description=readme,
     long_description_content_type="text/markdown",
     name='fast-soup',
-    version='1.2.1',
+    version='1.3.0',
     description='BeautifulSoup interface for lxml',
     python_requires='==3.*,>=3.8.0',
     author='spumer',
@@ -33,8 +33,8 @@ setup(
     package_data={},
     install_requires=[
         'beautifulsoup4==4.*,>=4.13.4', 'cssselect==1.*,>=1.3.0',
-        'lxml>=5.4.0',
-        'rm-html5-parser>=0.4.13'
+        'lxml>=6.0.0',
+        'rm-html5-parser>=0.4.14'
     ],
     extras_require={
         "dev": [
