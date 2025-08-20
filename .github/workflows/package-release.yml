@@ -12,7 +12,7 @@ jobs:
       matrix:
         # os: [ubuntu-latest, macos-latest, windows-latest]
         os: [ubuntu-latest, macos-latest]
-        python-version: [3.8, 3.11, 3.12]
+        python-version: [3.11, 3.12]
     steps:
     # checkout the repository to master
     # and use it as the current working directory
