@@ -157,6 +157,9 @@ class Tag:
             return tmplt.format(name, value.replace('"', '\\"'),)
 
         for attr_name, attr_value in attrs.items():
+            # Handle Python keyword collision: class_ -> class
+            if attr_name == 'class_':
+                attr_name = 'class'
             if attr_name == 'string':
                 attr_name = 'text()'
                 attr_xpath = _render(attr_name, attr_value, '{}="{}"')
@@ -177,11 +180,9 @@ class Tag:
                     tmplt = 'contains(concat(" ", normalize-space({}), " "), " {} ")'
                     attr_xpath = _render(attr_name, attr_value, tmplt)
 
-                # If attr value is empty guess should match tags without this attr too
-                # cause BS4 do that
                 else:
-                    # lxml don't match this case, workaround by inverse
-                    attr_xpath = 'not(%s)' % _render(attr_name, attr_value or '', '{} != "{}"')
+                    # Match elements where the attribute exists and equals empty string
+                    attr_xpath = _render(attr_name, '', '{}="{}"')
 
             attrs_xpath.append(attr_xpath)
 
@@ -240,9 +241,12 @@ class Tag:
         name = getattr(_strainer, 'name', None) or name
         attrs = getattr(_strainer, 'attrs', None) or attrs
 
-        if _strainer.string is not None:
-            # don't override if `string` field was manually setted before
-            attrs.setdefault('string', _strainer.string)
+        if _strainer.string_rules:
+            # Extract the actual string value from the StringMatchRule
+            string_value = _strainer.string_rules[0].string
+            if string_value:
+                # don't override if `string` field was manually set before
+                attrs.setdefault('string', string_value)
 
         if isinstance(name, list):
             # _build_xpath only accepts hashed parameters

@@ -85,7 +85,7 @@ def test_common(soup):
 def test_empty_attr(soup):
     res = soup.find_all('a', href='')
 
-    assert len(res) == 2
+    assert len(res) == 1
 
 
 def test_sibling(soup):

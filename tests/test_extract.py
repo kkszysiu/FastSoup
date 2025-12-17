@@ -28,7 +28,7 @@ class TestExtractBS4Soup(TestExtractBase):
 
     def soup(self, markup, **kwargs):
         """Build a Beautiful Soup object from markup."""
-        return BS4Soup(markup)
+        return BS4Soup(markup, features="lxml")
 
 
 class TestExtractFastHTML5Soup(TestExtractBase):
